@@ -1,182 +1,129 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
+using System.Net;
+using System.Net.Sockets;
 
-class Program
+namespace NEA_Mafia_New_2022
 {
-    public enum GameState { Day, Night, Accuse, GameOver };
-    public GameState curState;
 
-    public static void Main(string[] args)
+    class Program
     {
-        Console.WriteLine("(S)erver or (C)lient");
-        string initMenuInput = Console.ReadLine();
+        public enum GameState { Day, Night, Accuse, GameOver };
+        public GameState curState;
 
-        if (initMenuInput == "S")
+        public static void Main(string[] args)
         {
-            Server.StartServer();
-        }
-        else if (initMenuInput == "C")
-        {
-            Client.StartClient();
-        }
-    }
+            Console.WriteLine("(S)erver or (C)lient");
+            string initMenuInput = Console.ReadLine();
 
-    void Start()
-    {
-        curState = GameState.Day;
-        Game();
-    }
-
-
-    void Game()
-    {
-        Console.WriteLine("input:");
-        string input = Console.ReadLine();
-
-        switch (curState)
-        {
-            case GameState.Day:
-                return;
-        }
-    }
-
-    public static void ParsePlayerInput(string playerInput)
-    {
-        string ChatString, PlayerAccused;
-        if ((playerInput[0] == 'S') | (playerInput[0] == 's'))
-        {
-            playerInput.TrimStart('S', 's');
-            ChatString = playerInput;
-        }
-
-        else if ((playerInput[0] == 'V') | (playerInput[0] == 'v'))
-        {
-            //playerInput.TrimStart('V','v');
-            //PlayerAccused = playerInput;
-            //Vote(PlayerAccused, 0.5);
-            //TODO Vote method
-        }
-        return;
-    }
-
-}
-
-class Player
-{
-    public bool state;
-    public int protectionDate;
-    public string alignment, role, name;
-
-    public Player(string username)
-    {
-        name = username;
-        state = true;
-    }
-
-    public void Protect(int date)
-    {
-        protectionDate = date;
-    }
-
-    class Innocent : Player
-    {
-
-        public Innocent(string username) : base(username)
-        {
-            role = "Innocent";
-            alignment = "Town";
-        }
-    }
-
-    class Mafioso : Player
-    {
-
-        public Mafioso(string username) : base(username)
-        {
-            role = "Mafioso";
-            alignment = "Mafia";
-        }
-    }
-
-    class Detective : Player
-    {
-
-        public Detective(string username) : base(username)
-        {
-            role = "Detective";
-            alignment = "Town";
-        }
-    }
-
-    public static void Kill(Player player, int currentDate)
-    {
-        if ((player.state == false) | (player.protectionDate != currentDate))
-        {
-            return;
-        }
-        else
-        {
-            player.state = false;
-        }
-    }
-}
-
-class Server
-{
-    public static void StartServer()
-    {
-        IPHostEntry host = Dns.GetHostEntry("localhost");
-        IPAddress ipAddress = host.AddressList[0];
-        IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000);
-
-        try
-        {
-
-            Socket listener = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-            listener.Bind(localEndPoint);
-            listener.Listen(10);
-
-            Console.WriteLine("Waiting for a connection...");
-            Socket handler = listener.Accept();
-            Console.WriteLine("Connected");
-
-            string data = null;
-            byte[] bytes = null;
-
-            while (true)
+            if (initMenuInput == "S")
             {
-                bytes = new byte[1024];
-                int bytesRec = handler.Receive(bytes);
-                data = Encoding.ASCII.GetString(bytes, 0, bytesRec);
+                Server.StartServer();
+            }
+            else if (initMenuInput == "C")
+            {
+                Client.StartClient();
+            }
+        }
 
-                byte[] msg = Encoding.ASCII.GetBytes(data);
-                handler.Send(msg);
+        void Start()
+        {
+            curState = GameState.Day;
+            Game();
+        }
 
-                if (data.IndexOf("<EOF>") > -1)
-                {
 
-                    Console.WriteLine("Connection with",
-                    listener.RemoteEndPoint.ToString(), "terminated");
-                    break;
-                }
+        void Game()
+        {
+            Console.WriteLine("input:");
+            string input = Console.ReadLine();
 
-                else
-                {
-                    Console.WriteLine("Text recived : {0}", data);
-                }
+            switch (curState)
+            {
+                case GameState.Day:
+                    return;
+            }
+        }
+
+        public static void ParsePlayerInput(string playerInput)
+        {
+            string ChatString, PlayerAccused;
+            if ((playerInput[0] == 'S') | (playerInput[0] == 's'))
+            {
+                playerInput.TrimStart('S', 's');
+                ChatString = playerInput;
             }
 
-            handler.Shutdown(SocketShutdown.Both);
-            handler.Close();
+            else if ((playerInput[0] == 'V') | (playerInput[0] == 'v'))
+            {
+                //playerInput.TrimStart('V','v');
+                //PlayerAccused = playerInput;
+                //Vote(PlayerAccused, 0.5);
+                //TODO Vote method
+            }
+            return;
         }
 
-        catch (Exception e)
+    }
+
+    class Player
+    {
+        public bool state;
+        public int protectionDate;
+        public string alignment, role, name;
+
+        public Player(string username)
         {
-            Console.WriteLine(e.ToString());
+            name = username;
+            state = true;
         }
 
-        Console.WriteLine("\n press any key to continue...");
-        Console.ReadKey();
+        public void Protect(int date)
+        {
+            protectionDate = date;
+        }
+
+        class Innocent : Player
+        {
+
+            public Innocent(string username) : base(username)
+            {
+                role = "Innocent";
+                alignment = "Town";
+            }
+        }
+
+        class Mafioso : Player
+        {
+
+            public Mafioso(string username) : base(username)
+            {
+                role = "Mafioso";
+                alignment = "Mafia";
+            }
+        }
+
+        class Detective : Player
+        {
+
+            public Detective(string username) : base(username)
+            {
+                role = "Detective";
+                alignment = "Town";
+            }
+        }
+
+        public static void Kill(Player player, int currentDate)
+        {
+            if ((player.state == false) | (player.protectionDate != currentDate))
+            {
+                return;
+            }
+            else
+            {
+                player.state = false;
+            }
+        }
     }
 }
-
