@@ -23,10 +23,6 @@ namespace NEA_Mafia_New_2022
                 listener.Bind(localEndPoint);
                 listener.Listen(10);
 
-/*                Console.WriteLine("Waiting for a connection...");
-                Socket handler = listener.Accept();
-                Console.WriteLine("Connected");*/
-
                 int counter = 0;
 
                 while (true)
@@ -38,32 +34,6 @@ namespace NEA_Mafia_New_2022
                     handleClient client = new handleClient();
                     client.startClient(handler, listener, counter.ToString());
                 }
-
-                /*while (true)
-                {
-                    bytes = new byte[1024];
-                    int bytesRec = handler.Receive(bytes);
-                    data = Encoding.ASCII.GetString(bytes, 0, bytesRec);
-
-                    byte[] msg = Encoding.ASCII.GetBytes(data);
-                    handler.Send(msg);
-
-                    if (data.IndexOf("<EOF>") > -1)
-                    {
-
-                        Console.WriteLine("Connection with",
-                        listener.RemoteEndPoint.ToString(), "terminated");
-                        break;
-                    }
-
-                    else
-                    {
-                        Console.WriteLine("Text recived : {0}", data);
-                    }
-                }*/
-
-               /* handler.Shutdown(SocketShutdown.Both);
-                handler.Close();*/
             }
 
             catch (Exception e)
@@ -103,15 +73,15 @@ namespace NEA_Mafia_New_2022
                     bytes = new byte[1024];
                     int bytesRec = handler.Receive(bytes);
                     data = Encoding.ASCII.GetString(bytes, 0, bytesRec);
-
                     byte[] msg = Encoding.ASCII.GetBytes(data);
                     handler.Send(msg);
 
                     if (data.IndexOf("<EOF>") > -1)
                     {
 
-                        Console.WriteLine("Connection with",
-                        listener.RemoteEndPoint.ToString(), "terminated");
+                        Console.WriteLine("Connection with client",clNo,"terminated");
+/*                        Console.WriteLine("Connection with",
+                        listener.RemoteEndPoint.ToString(), "terminated");*/
                         break;
                     }
 
