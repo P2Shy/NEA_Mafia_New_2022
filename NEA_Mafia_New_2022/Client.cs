@@ -24,6 +24,9 @@ namespace NEA_Mafia_New_2022
 
                 sender.Connect(remoteEP);
 
+                Chat initChat = new Chat();
+                initChat.Start(sender);
+
 
             }
             catch (Exception e)
@@ -33,7 +36,7 @@ namespace NEA_Mafia_New_2022
         }
     }
 
-    public class Handle
+    public class Chat
     {
         Socket sender;
 
@@ -51,15 +54,15 @@ namespace NEA_Mafia_New_2022
             try
             {
 
-                Console.WriteLine("Socket connected to {0}",
+                Console.WriteLine("Socket connected to ",
                     sender.RemoteEndPoint.ToString());
 
-                Handle newChat = new Handle();
-                newChat.Start(sender);
+                byte[] bytes = null;
 
                 while (true)
                 {
 
+                    bytes = new byte[1024];
                     Console.Write("Message:");
                     string userMessage = "<MSG>" + Console.ReadLine();
                     byte[] msg = Encoding.ASCII.GetBytes(userMessage);
