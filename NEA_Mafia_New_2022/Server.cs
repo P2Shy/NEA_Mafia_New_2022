@@ -33,8 +33,8 @@ namespace NEA_Mafia_New_2022
                     Console.WriteLine("Waiting for a connection...");
                     Socket handler = listener.Accept();
                     Console.WriteLine("Connected");
-                    handleClient client = new handleClient();
-                    client.startClient(handler, listener, counter.ToString());
+                    HandleClient client = new HandleClient();
+                    client.StartClient(handler, listener, counter.ToString());
 
                     if (counter == MaxPlayers)
                     {
@@ -54,22 +54,22 @@ namespace NEA_Mafia_New_2022
         }
     }
 
-    public class handleClient
+    public class HandleClient
     {
         Socket handler, listener;
         string clNo;
 
-        public void startClient(Socket inClientHandler, Socket inClientListener ,string clientNo)
+        public void StartClient(Socket inClientHandler, Socket inClientListener ,string clientNo)
         {
             this.handler = inClientHandler;
             this.listener = inClientListener;
             this.clNo = clientNo;
 
-            Thread ctThread = new Thread(doChat);
+            Thread ctThread = new Thread(DoChat);
             ctThread.Start();
         }
 
-        private void doChat()
+        private void DoChat()
         {
             try
             {

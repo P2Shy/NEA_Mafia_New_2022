@@ -7,18 +7,18 @@ namespace NEA_Mafia_New_2022
     public enum GameState { Day, Night, Vote, GameOver}
     class GameLogic
     {
-        public void StartGame()
+        public static void StartGame()
         {
             GameState curState = GameState.Day;
             //Call role distribution
         }
 
-        public void Game()
+        public static void Game()
         {
 
         }
 
-        public void RoleDistribution(string[] Deck, string[] PlayerList)
+        public static void RoleDistribution(string[] Deck, string[] PlayerList)
         {
             Random rnd = new Random();
             
