@@ -9,8 +9,12 @@ namespace NEA_Mafia_New_2022
     {
         public void StartGame()
         {
-            GameState curState;
+            GameState curState = GameState.Day;
+            //Call role distribution
+        }
 
+        public void Game()
+        {
 
         }
 

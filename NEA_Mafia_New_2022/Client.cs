@@ -33,7 +33,8 @@ namespace NEA_Mafia_New_2022
                     {
 
                         Console.Write("Message:");
-                        byte[] msg = Encoding.ASCII.GetBytes(Console.ReadLine());
+                        string userMessage = "<MSG>" + Console.ReadLine();
+                        byte[] msg = Encoding.ASCII.GetBytes(userMessage);
 
                         int bytesSent = sender.Send(msg);
 

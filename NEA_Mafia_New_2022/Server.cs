@@ -21,9 +21,11 @@ namespace NEA_Mafia_New_2022
 
                 Socket listener = new Socket(ipAddress.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
                 listener.Bind(localEndPoint);
-                listener.Listen(10);
+                listener.Listen(30);
 
+                string[] ipList;
                 int counter = 0;
+                int MaxPlayers = 2;
 
                 while (true)
                 {
@@ -33,6 +35,12 @@ namespace NEA_Mafia_New_2022
                     Console.WriteLine("Connected");
                     handleClient client = new handleClient();
                     client.startClient(handler, listener, counter.ToString());
+
+                    if (counter == MaxPlayers)
+                    {
+                        GameLogic.StartGame();
+                        handler.Send(Encoding.ASCII.GetBytes("<CMD> Start Game"));
+                    }
                 }
             }
 
@@ -76,12 +84,13 @@ namespace NEA_Mafia_New_2022
                     byte[] msg = Encoding.ASCII.GetBytes(data);
                     handler.Send(msg);
 
+                   // if (curState != null)
+
+                    //elif
                     if (data.IndexOf("<EOF>") > -1)
                     {
 
                         Console.WriteLine("Connection with client",clNo,"terminated");
-/*                        Console.WriteLine("Connection with",
-                        listener.RemoteEndPoint.ToString(), "terminated");*/
                         break;
                     }
 
