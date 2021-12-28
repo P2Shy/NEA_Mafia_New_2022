@@ -11,11 +11,12 @@ namespace NEA_Mafia_New_2022
         {
             GameState curState = GameState.Day;
             //Call role distribution
+            Game();
         }
 
         public static void Game()
         {
-
+            Console.WriteLine("Game Started");
         }
 
         public static void RoleDistribution(string[] Deck, string[] PlayerList)
