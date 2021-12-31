@@ -116,5 +116,10 @@ namespace NEA_Mafia_New_2022
                 Console.WriteLine(ex.ToString());
             }
         }
+
+        private void StartGame()
+        {
+
+        }
     }
 }
