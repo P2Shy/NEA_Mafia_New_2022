@@ -65,12 +65,16 @@ namespace NEA_Mafia_New_2022
             this.listener = inClientListener;
             this.clNo = clientNo;
 
+
             Thread ctThread = new Thread(DoChat);
             ctThread.Start();
         }
 
         private void DoChat()
         {
+
+            Thread Game = new Thread(StartGame);
+
             try
             {
                 string data = null;
@@ -84,10 +88,13 @@ namespace NEA_Mafia_New_2022
                     byte[] msg = Encoding.ASCII.GetBytes(data);
                     handler.Send(msg);
 
-                   // if (curState != null)
+                   if (data == "<GameStart>")
+                    {
+                        Game.Start();
+                    }
 
                     //elif
-                    if (data.IndexOf("<EOF>") > -1)
+                    else if (data.IndexOf("<EOF>") > -1)
                     {
 
                         Console.WriteLine("Connection with client",clNo,"terminated");
