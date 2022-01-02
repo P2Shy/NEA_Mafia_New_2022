@@ -25,7 +25,6 @@ namespace NEA_Mafia_New_2022
                 listener.Bind(localEndPoint);
                 listener.Listen(30);
 
-                string[] ipList;
                 int counter = 0;
                 int MaxPlayers = 2;
 
@@ -33,7 +32,6 @@ namespace NEA_Mafia_New_2022
                 {
                     counter += 1;
                     Console.WriteLine("Waiting for a connection...");
-                    Console.WriteLine(listener.RemoteEndPoint);
                     Socket handler = listener.Accept();
                     Console.WriteLine("Connected");
                     HandleClient client = new HandleClient();
@@ -62,6 +60,8 @@ namespace NEA_Mafia_New_2022
         public enum GameState { Day, Night, Vote, GameOver }
         GameState curState;
 
+        string[] ipList = new string[10];
+
         Socket handler, listener;
         string clNo;
 
@@ -71,6 +71,10 @@ namespace NEA_Mafia_New_2022
             this.listener = inClientListener;
             this.clNo = clientNo;
 
+            ipList[Convert.ToInt32(clientNo)] = handler.RemoteEndPoint.ToString();
+            foreach (string ip in ipList){
+                Console.WriteLine(ip);
+            }
 
             Thread ctThread = new Thread(DoChat);
             ctThread.Start();

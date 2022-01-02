@@ -16,7 +16,7 @@ namespace NEA_Mafia_New_2022
         {
             Console.WriteLine("Game Started");
 
-            GameState curState = GameState.Day;
+/*            GameState curState = GameState.Day;
 
             switch (curState)
             {
@@ -26,7 +26,7 @@ namespace NEA_Mafia_New_2022
                         break;
                     }
 
-            }
+            }*/
         }
 
         public static void RoleDistribution(string[] Deck, string[] PlayerList)
