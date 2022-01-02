@@ -10,6 +10,7 @@ namespace NEA_Mafia_New_2022
 {
     class Server
     {
+
         public static void StartServer()
         {
             IPHostEntry host = Dns.GetHostEntry("localhost");
@@ -56,6 +57,9 @@ namespace NEA_Mafia_New_2022
 
     public class HandleClient
     {
+        public enum GameState { Day, Night, Vote, GameOver }
+        GameState curState;
+
         Socket handler, listener;
         string clNo;
 
@@ -88,12 +92,32 @@ namespace NEA_Mafia_New_2022
                     byte[] msg = Encoding.ASCII.GetBytes(data);
                     handler.Send(msg);
 
-                   if (data == "<GameStart>")
+                   if (data.Contains("<GameState>")
                     {
-                        Game.Start();
+                        string GameStateRec = data.Split("<GameState>")[1];
+
+                        if (GameStateRec == "D")
+                        {
+                            curState = GameState.Day;
+                        }
+                        else if (GameStateRec == "N")
+                        {
+                            curState = GameState.Night;
+                        }
+                        else if (GameStateRec == "V")
+                        {
+                            curState = GameState.Vote;
+                        }
+                        else if (GameStateRec == "E")
+                        {
+                            curState = GameState.GameOver;
+                        }
+                        else
+                        {
+                            continue;
+                        }
                     }
 
-                    //elif
                     else if (data.IndexOf("<EOF>") > -1)
                     {
 
@@ -115,11 +139,6 @@ namespace NEA_Mafia_New_2022
             {
                 Console.WriteLine(ex.ToString());
             }
-        }
-
-        private void StartGame()
-        {
-
         }
     }
 }

@@ -73,7 +73,13 @@ namespace NEA_Mafia_New_2022
                     Console.WriteLine("Echo = {0}",
                     Encoding.ASCII.GetString(bytes, 0, bytesRec));
 
-                    if (Encoding.ASCII.GetString(bytes).IndexOf("<EOF>") > -1)
+                    if (Encoding.ASCII.GetString(bytes).Contains("<GameStart>"))
+                    {
+                        //Call game method
+                        continue;
+                    }
+
+                    else if (Encoding.ASCII.GetString(bytes).IndexOf("<EOF>") > -1)
                     {
                         break;
                     }

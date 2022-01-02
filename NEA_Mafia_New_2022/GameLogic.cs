@@ -4,7 +4,6 @@ using System.Text;
 
 namespace NEA_Mafia_New_2022
 {
-    public enum GameState { Day, Night, Vote, GameOver}
     class GameLogic
     {
         public static void StartGame()
