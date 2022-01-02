@@ -13,6 +13,7 @@ namespace NEA_Mafia_New_2022
 
         public static void StartServer()
         {
+           
             IPHostEntry host = Dns.GetHostEntry("localhost");
             IPAddress ipAddress = host.AddressList[0];
             IPEndPoint localEndPoint = new IPEndPoint(ipAddress, 11000);
@@ -32,6 +33,7 @@ namespace NEA_Mafia_New_2022
                 {
                     counter += 1;
                     Console.WriteLine("Waiting for a connection...");
+                    Console.WriteLine(listener.RemoteEndPoint);
                     Socket handler = listener.Accept();
                     Console.WriteLine("Connected");
                     HandleClient client = new HandleClient();
@@ -77,7 +79,7 @@ namespace NEA_Mafia_New_2022
         private void DoChat()
         {
 
-            Thread Game = new Thread(StartGame);
+            //Thread Game = new Thread(StartGame);
 
             try
             {
@@ -92,7 +94,7 @@ namespace NEA_Mafia_New_2022
                     byte[] msg = Encoding.ASCII.GetBytes(data);
                     handler.Send(msg);
 
-                   if (data.Contains("<GameState>")
+                   if (data.Contains("<GameState>"))
                     {
                         string GameStateRec = data.Split("<GameState>")[1];
 
