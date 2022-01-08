@@ -24,9 +24,8 @@ namespace NEA_Mafia_New_2022
 
                 sender.Connect(remoteEP);
 
-                Chat initChat = new Chat();
-                initChat.Start(sender);
-
+                HandleConnect newConnection = new HandleConnect();
+                newConnection.Start(sender);
 
             }
             catch (Exception e)
@@ -36,26 +35,64 @@ namespace NEA_Mafia_New_2022
         }
     }
 
-    public class Chat
+    public class HandleConnect
     {
         Socket sender;
-
         public void Start(Socket iSender)
         {
             this.sender = iSender;
 
-            Thread ctThread = new Thread(DoChat);
-            ctThread.Start();
+            Thread listenThread = new Thread(Listen);
+            Thread sendThread = new Thread(Send);
+            sendThread.Start();
+            listenThread.Start();
+            
         }
 
-        private void DoChat()
+        private void Listen()
+        {
+            try
+            {
+                byte[] bytes = null;
+
+                while (true)
+                {
+
+                    int bytesRec = sender.Receive(bytes);
+
+                    string recivedString = Encoding.ASCII.GetString(bytes, 0, bytesRec);
+                    Console.WriteLine("Echo = {0}",
+                    recivedString);
+
+                    if (Encoding.ASCII.GetString(bytes).IndexOf("<EOF>") > -1)
+                    {
+                        break;
+                    }
+                }
+
+                sender.Shutdown(SocketShutdown.Both);
+                sender.Close();
+            }
+
+            catch (ArgumentNullException ane)
+            {
+                Console.WriteLine("ArgumentNullException : {0}", ane.ToString());
+            }
+            catch (SocketException se)
+            {
+                Console.WriteLine("SocketException : {0}", se.ToString());
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Unexpected exception : {0}", e.ToString());
+            }
+        }
+
+        private void Send()
         {
 
             try
             {
-
-                Console.WriteLine("Socket connected to ",
-                    sender.RemoteEndPoint.ToString());
 
                 byte[] bytes = null;
 
@@ -69,25 +106,7 @@ namespace NEA_Mafia_New_2022
 
                     int bytesSent = sender.Send(msg);
 
-                    int bytesRec = sender.Receive(bytes);
-                    Console.WriteLine("Echo = {0}",
-                    Encoding.ASCII.GetString(bytes, 0, bytesRec));
-
-                    if (Encoding.ASCII.GetString(bytes).Contains("<GameStart>"))
-                    {
-                        //Call game method
-                        continue;
-                    }
-
-                    else if (Encoding.ASCII.GetString(bytes).IndexOf("<EOF>") > -1)
-                    {
-                        break;
-                    }
-
                 }
-
-                sender.Shutdown(SocketShutdown.Both);
-                sender.Close();
 
             }
             catch (ArgumentNullException ane)

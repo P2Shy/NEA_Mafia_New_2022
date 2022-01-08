@@ -57,7 +57,7 @@ namespace NEA_Mafia_New_2022
 
     public class HandleClient
     {
-        public enum GameState { Day, Night, Vote, GameOver }
+        public enum GameState { Waiting, Day, Night, Vote, Over };
         GameState curState;
 
         string[] ipList = new string[10];
@@ -71,13 +71,48 @@ namespace NEA_Mafia_New_2022
             this.listener = inClientListener;
             this.clNo = clientNo;
 
-            ipList[Convert.ToInt32(clientNo)] = handler.RemoteEndPoint.ToString();
-            foreach (string ip in ipList){
-                Console.WriteLine(ip);
-            }
-
             Thread ctThread = new Thread(DoChat);
             ctThread.Start();
+
+            
+        }
+
+        private void Listner()
+        {
+            try
+            {
+                string data = null;
+                byte[] bytes = null;
+
+                while (true)
+                {
+                    bytes = new byte[1024];
+                    int bytesRec = handler.Receive(bytes);
+                    data = Encoding.ASCII.GetString(bytes, 0, bytesRec);
+                    byte[] msg = Encoding.ASCII.GetBytes(data);
+                    handler.Send(msg);
+
+                    if (data.IndexOf("<EOF>") > -1)
+                    {
+
+                        Console.WriteLine("Connection with client", clNo, "terminated");
+                        break;
+                    }
+
+                    else
+                    {
+                        Console.WriteLine("Text recived : {0}", data);
+                    }
+                }
+
+                handler.Shutdown(SocketShutdown.Both);
+                handler.Close();
+            }
+
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+            }
         }
 
         private void DoChat()
