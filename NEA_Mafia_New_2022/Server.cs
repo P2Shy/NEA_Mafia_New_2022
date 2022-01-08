@@ -98,33 +98,7 @@ namespace NEA_Mafia_New_2022
                     byte[] msg = Encoding.ASCII.GetBytes(data);
                     handler.Send(msg);
 
-                   if (data.Contains("<GameState>"))
-                    {
-                        string GameStateRec = data.Split("<GameState>")[1];
-
-                        if (GameStateRec == "D")
-                        {
-                            curState = GameState.Day;
-                        }
-                        else if (GameStateRec == "N")
-                        {
-                            curState = GameState.Night;
-                        }
-                        else if (GameStateRec == "V")
-                        {
-                            curState = GameState.Vote;
-                        }
-                        else if (GameStateRec == "E")
-                        {
-                            curState = GameState.GameOver;
-                        }
-                        else
-                        {
-                            continue;
-                        }
-                    }
-
-                    else if (data.IndexOf("<EOF>") > -1)
+                     if (data.IndexOf("<EOF>") > -1)
                     {
 
                         Console.WriteLine("Connection with client",clNo,"terminated");
