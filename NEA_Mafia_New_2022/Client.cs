@@ -57,6 +57,7 @@ namespace NEA_Mafia_New_2022
 
                 while (true)
                 {
+                    bytes = new byte[1024];
 
                     int bytesRec = sender.Receive(bytes);
 

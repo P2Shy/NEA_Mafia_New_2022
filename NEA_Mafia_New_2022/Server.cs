@@ -99,6 +99,11 @@ namespace NEA_Mafia_New_2022
                         break;
                     }
 
+                    else if (data.IndexOf("<STR>") > -1)
+                    {
+
+                    }
+
                     else
                     {
                         Console.WriteLine("Text recived : {0}", data);
