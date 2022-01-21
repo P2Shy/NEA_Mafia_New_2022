@@ -17,7 +17,14 @@ namespace NEA_Mafia_New_2022
 
             if (initMenuInput == "S")
             {
-                Server.StartServer();
+                Server hostServer = new Server();
+                hostServer.Bind(655);
+                hostServer.Listen(50);
+                hostServer.Accept();
+
+                while (true){
+                    Console.ReadLine();
+                }
             }
             else if (initMenuInput == "C")
             {
