@@ -18,7 +18,7 @@ namespace NEA_Mafia_New_2022
             if (initMenuInput == "S")
             {
                 Server hostServer = new Server();
-                hostServer.Bind(655);
+                hostServer.Bind(6556);
                 hostServer.Listen(50);
                 hostServer.Accept();
 
@@ -28,7 +28,14 @@ namespace NEA_Mafia_New_2022
             }
             else if (initMenuInput == "C")
             {
-                Client.StartClient();
+                Client newClient = new Client();
+                newClient.Connect("127.0.0.1", 6556);
+
+                while (true)
+                {
+                    Console.ReadLine();
+
+                }
             }
         }
 

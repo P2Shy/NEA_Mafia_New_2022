@@ -25,7 +25,7 @@ namespace NEA_Mafia_New_2022
 
         public void Listen(int backlog)
         {
-            __socket.Listen(100);
+            __socket.Listen(backlog);
         }
 
         public void Accept()
@@ -49,6 +49,15 @@ namespace NEA_Mafia_New_2022
 
             __buffer = new byte[1024];
             clientSocket.BeginReceive(__buffer, 0, __buffer.Length, SocketFlags.None, RecivedCallback, clientSocket);
+        }
+    }
+
+    public static class PacketHandler
+    {
+        public static void Handle(byte[] packet, Socket clientSocket)
+        {
+            ushort packetLength = BitConverter.ToUInt16(packet,0);
+            ushort packetType = BitConverter.ToUInt16(packet, 2);
         }
     }
         
