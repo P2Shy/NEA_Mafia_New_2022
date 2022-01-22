@@ -19,12 +19,25 @@ namespace NEA_Mafia_New_2022
 
         public void Connect (string ipAdress, int port)
         {
-            _socket.BeginConnect(new IPEndPoint(IPAddress.Parse(ipAdress), port) ConnectCallback, null)
+            _socket.BeginConnect(new IPEndPoint(IPAddress.Parse(ipAdress), port), ConnectCallback, null);
         }
 
         public void ConnectCallback (IAsyncResult result)
         {
-            _socket.BeginReceive(_buffer)
+            Console.WriteLine("Connection established!");
+            _buffer = new byte[1024];
+            _socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, RecivedCallback, null);
+        }
+
+        public void RecivedCallback(IAsyncResult result)
+        {
+            int bufLength = _socket.EndReceive(result);
+            byte[] packet = new byte[bufLength];
+            Array.Copy(_buffer, packet, packet.Length);
+
+
+            _buffer = new byte[1024];
+            _socket.BeginRecive(_buffer, 0, _buffer.Length, SocketFlags.None, RecivedCallback, null);
         }
     }    
 }
