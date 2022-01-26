@@ -22,6 +22,8 @@ namespace NEA_Mafia_New_2022
             _socket.BeginConnect(new IPEndPoint(IPAddress.Parse(ipAdress), port), ConnectCallback, null);
         }
 
+       // Implement Marshal copy?
+
         public void ConnectCallback(IAsyncResult result)
         {
             if (_socket.Connected)
@@ -72,6 +74,34 @@ namespace NEA_Mafia_New_2022
             byte[] tempBuf = new byte[4];
             tempBuf = BitConverter.GetBytes(value);
             Buffer.BlockCopy(tempBuf, 0, _buffer, offset, 4);
+        }
+
+        public void WriteString(string value, int offset)
+        {
+            byte[] tempBuf = new byte[value.Length];
+            tempBuf = Encoding.UTF8.GetBytes(value);
+            Buffer.BlockCopy(tempBuf, 0, _buffer, offset, value.Length);
+        }
+    }
+
+    public class Message : PacketStructure
+    {
+
+        private string _message;
+
+        public Message(string message) : base((ushort)(4 + message.Length), 2000)
+        {
+            _message = message;
+        }
+
+        public string Text
+        {
+            get { return _message; }
+            set 
+            {
+                _message = value;
+                WriteString(value, 4); 
+            }
         }
     }
 }
