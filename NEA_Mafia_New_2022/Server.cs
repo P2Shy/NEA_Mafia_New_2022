@@ -47,6 +47,8 @@ namespace NEA_Mafia_New_2022
             byte[] packet = new byte[bufferSize];
             Array.Copy(__buffer, packet, packet.Length);
 
+            Console.WriteLine(Encoding.UTF8.GetString(packet));
+
             __buffer = new byte[1024];
             clientSocket.BeginReceive(__buffer, 0, __buffer.Length, SocketFlags.None, RecivedCallback, clientSocket);
         }

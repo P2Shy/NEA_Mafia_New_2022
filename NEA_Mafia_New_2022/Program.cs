@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Net;
 using System.Net.Sockets;
+using System.Timers;
 
 namespace NEA_Mafia_New_2022
 {
@@ -10,9 +11,11 @@ namespace NEA_Mafia_New_2022
     class Program
     {
 
+        public static int DayCycle = 10000;
+
         public static void Main(string[] args)
         {
-            Console.WriteLine("(S)erver or (C)lient");
+            /*Console.WriteLine("(S)erver or (C)lient");
             string initMenuInput = Console.ReadLine();
 
             if (initMenuInput == "S")
@@ -37,7 +40,9 @@ namespace NEA_Mafia_New_2022
                     Message packet = new Message(msg);
                     newClient.Send(packet.Data());
                 }
-            }
+            }*/
+
+            Day();
         }
 
         public class Player
@@ -87,18 +92,30 @@ namespace NEA_Mafia_New_2022
                 }
             }
 
-            public static void Kill(Player player, int currentDate)
-            {
-                if ((player.state == false) | (player.protectionDate != currentDate))
-                {
-                    return;
-                }
-                else
-                {
-                    player.state = false;
-                }
-            }
+            
         }
+
+
+        public static void Day()
+        {
+            Timer timer = new System.Timers.Timer(DayCycle);
+            timer.Elapsed += new ElapsedEventHandler(Night);
+            timer.Enabled = true;
+            
+            while (true)
+            {
+                Console.ReadLine();
+            }
+
+
+
+        }
+
+        public static void Night(object source, ElapsedEventArgs e)
+        {
+            Console.Write("E");
+        }
+
     }
 
 }
