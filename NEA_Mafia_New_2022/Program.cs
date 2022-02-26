@@ -8,6 +8,8 @@ using System.Timers;
 namespace NEA_Mafia_New_2022
 {
 
+    public enum GameState { Day, Night}
+
     class Program
     {
 
@@ -15,7 +17,7 @@ namespace NEA_Mafia_New_2022
 
         public static void Main(string[] args)
         {
-            /*Console.WriteLine("(S)erver or (C)lient");
+            Console.WriteLine("(S)erver or (C)lient");
             string initMenuInput = Console.ReadLine();
 
             if (initMenuInput == "S")
@@ -25,7 +27,8 @@ namespace NEA_Mafia_New_2022
                 hostServer.Listen(50);
                 hostServer.Accept();
 
-                while (true){
+                while (true)
+                {
                     Console.ReadLine();
                 }
             }
@@ -40,9 +43,19 @@ namespace NEA_Mafia_New_2022
                     Message packet = new Message(msg);
                     newClient.Send(packet.Data());
                 }
-            }*/
+            }
 
-            Day();
+        }
+
+        void StartGame()
+        {
+            //distribute roles
+            //setup everything
+
+            GameState curState = GameState.Day;
+
+            
+
         }
 
         public class Player
@@ -92,30 +105,7 @@ namespace NEA_Mafia_New_2022
                 }
             }
 
-            
-        }
-
-
-        public static void Day()
-        {
-            Timer timer = new System.Timers.Timer(DayCycle);
-            timer.Elapsed += new ElapsedEventHandler(Night);
-            timer.Enabled = true;
-            
-            while (true)
-            {
-                Console.ReadLine();
-            }
-
-
 
         }
-
-        public static void Night(object source, ElapsedEventArgs e)
-        {
-            Console.Write("E");
-        }
-
     }
-
 }
