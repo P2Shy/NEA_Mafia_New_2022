@@ -13,8 +13,6 @@ namespace NEA_Mafia_New_2022
     class Program
     {
 
-        public static int DayCycle = 10000;
-
         public static void Main(string[] args)
         {
             Console.WriteLine("(S)erver or (C)lient");
@@ -39,9 +37,9 @@ namespace NEA_Mafia_New_2022
 
                 while (true)
                 {
-                    string msg = Console.ReadLine();
-                    Message packet = new Message(msg);
-                    newClient.Send(packet.Data());
+                    string msgString = Console.ReadLine();
+                    Message msg = new Message(msgString);
+                    newClient.Send(msg.Data);
                 }
             }
 

@@ -75,7 +75,7 @@ namespace NEA_Mafia_New_2022
 
         public Message(string message) : base((ushort)(4 + message.Length), 2000)
         {
-            _message = message;
+            Text = message;
         }
 
         public Message(byte[] packet) : base(packet)

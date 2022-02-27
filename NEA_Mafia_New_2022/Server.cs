@@ -38,6 +38,7 @@ namespace NEA_Mafia_New_2022
             Socket clientSocket = __socket.EndAccept(result);
             Accept();
             clientSocket.BeginReceive(__buffer, 0, __buffer.Length, SocketFlags.None, RecivedCallback, clientSocket);
+            
         }
 
         public void RecivedCallback(IAsyncResult result)
@@ -46,6 +47,9 @@ namespace NEA_Mafia_New_2022
             int bufferSize = clientSocket.EndReceive(result);
             byte[] packet = new byte[bufferSize];
             Array.Copy(__buffer, packet, packet.Length);
+
+            PacketHandler.Handle(packet, clientSocket);
+
             __buffer = new byte[1024];
             clientSocket.BeginReceive(__buffer, 0, __buffer.Length, SocketFlags.None, RecivedCallback, clientSocket);
         }
@@ -53,15 +57,15 @@ namespace NEA_Mafia_New_2022
 
     public static class PacketHandler
     {
-        public static void Handle(byte[] packet, Socket clientSocket)
+        public static void Handle(byte[] hpacket, Socket clientSocket)
         {
-            ushort packetLength = BitConverter.ToUInt16(packet,0);
-            ushort packetType = BitConverter.ToUInt16(packet, 2);
+            ushort packetLength = BitConverter.ToUInt16(hpacket,0);
+            ushort packetType = BitConverter.ToUInt16(hpacket, 2);
 
             switch (packetType)
             {
                 case 2000:
-                    Message msg = new Message(packet);
+                    Message msg = new Message(hpacket);
                     Console.WriteLine(msg.Text);
                     break;
             }
