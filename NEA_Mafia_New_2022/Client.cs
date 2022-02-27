@@ -11,6 +11,7 @@ namespace NEA_Mafia_New_2022
     {
         private Socket _socket;
         private byte[] _buffer;
+        private Guid clientGuid = Guid.NewGuid();
 
         public Client()
         {
@@ -43,6 +44,7 @@ namespace NEA_Mafia_New_2022
             byte[] packet = new byte[bufLength];
             Array.Copy(_buffer, packet, packet.Length);
 
+            ClientPacketHandler.Handle(packet, _socket);
 
             _buffer = new byte[1024];
             _socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, RecivedCallback, null);
@@ -52,7 +54,29 @@ namespace NEA_Mafia_New_2022
         {
             _socket.Send(data);
         }
-    } 
-    
-    
+
+        public string ID
+        {
+            get { return clientGuid.ToString(); }
+        }
+    }
+
+    public static class ClientPacketHandler
+    {
+        public static void Handle(byte[] hpacket, Socket clientSocket)
+        {
+            ushort packetLength = BitConverter.ToUInt16(hpacket, 0);
+            ushort packetType = BitConverter.ToUInt16(hpacket, 2);
+
+            switch (packetType)
+            {
+                case 2000:
+                    Message msg = new Message(hpacket);
+                    Console.WriteLine(msg.Text);
+                    break;
+            }
+        }
+    }
+
+
 }

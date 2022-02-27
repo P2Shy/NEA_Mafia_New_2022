@@ -11,11 +11,12 @@ namespace NEA_Mafia_New_2022
     {
         private byte[] _buffer;
 
-        public PacketStructure(ushort length, ushort type)
+        public PacketStructure(ushort length, ushort type, string id)
         {
             _buffer = new byte[length];
             WriteUShort(length, 0);
             WriteUShort(type, 2);
+            WriteString(id, 4);
         }
 
         // Implement Marshal copy?
@@ -55,16 +56,22 @@ namespace NEA_Mafia_New_2022
             return Encoding.UTF8.GetString(_buffer, offset, count);
         }
 
-        public void Header(ushort length, ushort type)
+        public void Header(ushort length, ushort type, string id)
         {
             WriteUShort(length, 0);
             WriteUShort(type, 2);
+            WriteString(id, 4);
         }
 
 
         public byte[] Data
         {
             get { return _buffer; }
+        }
+
+        public string ID
+        {
+            get { return ReadString(4, 128); }
         }
     }
 
@@ -73,7 +80,7 @@ namespace NEA_Mafia_New_2022
 
         private string _message;
 
-        public Message(string message) : base((ushort)(4 + message.Length), 2000)
+        public Message(string message, string id) : base((ushort)(4 + message.Length + 128), 2000, id)
         {
             Text = message;
         }
@@ -85,12 +92,17 @@ namespace NEA_Mafia_New_2022
 
         public string Text
         {
-            get { return ReadString(4, Data.Length - 4); }
+            get { return ReadString(132, Data.Length - 132); }
             set
             {
                 _message = value;
-                WriteString(value, 4);
+                WriteString(value, 132);
             }
         }
     }
+
+/*    public class Init : PacketStructure
+    {
+
+    }*/
 }

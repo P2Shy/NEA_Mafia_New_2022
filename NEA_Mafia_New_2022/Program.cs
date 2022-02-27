@@ -38,7 +38,7 @@ namespace NEA_Mafia_New_2022
                 while (true)
                 {
                     string msgString = Console.ReadLine();
-                    Message msg = new Message(msgString);
+                    Message msg = new Message(msgString, newClient.ID);
                     newClient.Send(msg.Data);
                 }
             }

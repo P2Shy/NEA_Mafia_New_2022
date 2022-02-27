@@ -12,6 +12,7 @@ namespace NEA_Mafia_New_2022
     {
         private Socket __socket;
         private byte[] __buffer = new byte[1024];
+        private Guid clientID = Guid.NewGuid();
 
         public Server()
         {
@@ -48,14 +49,14 @@ namespace NEA_Mafia_New_2022
             byte[] packet = new byte[bufferSize];
             Array.Copy(__buffer, packet, packet.Length);
 
-            PacketHandler.Handle(packet, clientSocket);
+            ServerPacketHandler.Handle(packet, clientSocket);
 
             __buffer = new byte[1024];
             clientSocket.BeginReceive(__buffer, 0, __buffer.Length, SocketFlags.None, RecivedCallback, clientSocket);
         }
     }
 
-    public static class PacketHandler
+    public static class ServerPacketHandler
     {
         public static void Handle(byte[] hpacket, Socket clientSocket)
         {
@@ -66,7 +67,7 @@ namespace NEA_Mafia_New_2022
             {
                 case 2000:
                     Message msg = new Message(hpacket);
-                    Console.WriteLine(msg.Text);
+                    Console.WriteLine(msg.ID +":"+ msg.Text);
                     break;
             }
         }
