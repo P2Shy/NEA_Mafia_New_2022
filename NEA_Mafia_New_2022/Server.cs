@@ -46,9 +46,6 @@ namespace NEA_Mafia_New_2022
             int bufferSize = clientSocket.EndReceive(result);
             byte[] packet = new byte[bufferSize];
             Array.Copy(__buffer, packet, packet.Length);
-
-            Console.WriteLine(Encoding.UTF8.GetString(packet));
-
             __buffer = new byte[1024];
             clientSocket.BeginReceive(__buffer, 0, __buffer.Length, SocketFlags.None, RecivedCallback, clientSocket);
         }
@@ -60,6 +57,14 @@ namespace NEA_Mafia_New_2022
         {
             ushort packetLength = BitConverter.ToUInt16(packet,0);
             ushort packetType = BitConverter.ToUInt16(packet, 2);
+
+            switch (packetType)
+            {
+                case 2000:
+                    Message msg = new Message(packet);
+                    Console.WriteLine(msg.Text);
+                    break;
+            }
         }
     }
         

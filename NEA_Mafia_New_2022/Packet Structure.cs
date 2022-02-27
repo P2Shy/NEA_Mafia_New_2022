@@ -20,6 +20,11 @@ namespace NEA_Mafia_New_2022
 
         // Implement Marshal copy?
 
+        public PacketStructure(byte[] packet)
+        {
+            _buffer = packet;
+        }
+
         public void WriteUShort(ushort value, int offset)
         {
             byte[] tempBuf = new byte[2];
@@ -27,6 +32,10 @@ namespace NEA_Mafia_New_2022
             Buffer.BlockCopy(tempBuf, 0, _buffer, offset, 2);
         }
 
+        public ushort ReadUShort(int offset)
+        {
+            return BitConverter.ToUInt16(_buffer, offset); 
+        }
         public void WriteUInt(ushort value, int offset)
         {
             byte[] tempBuf = new byte[4];
@@ -41,6 +50,11 @@ namespace NEA_Mafia_New_2022
             Buffer.BlockCopy(tempBuf, 0, _buffer, offset, value.Length);
         }
 
+        public string ReadString(int offset, int count)
+        {
+            return Encoding.UTF8.GetString(_buffer, offset, count);
+        }
+
         public void Header(ushort length, ushort type)
         {
             WriteUShort(length, 0);
@@ -48,9 +62,9 @@ namespace NEA_Mafia_New_2022
         }
 
 
-        public byte[] Data()
+        public byte[] Data
         {
-            return _buffer;
+            get { return _buffer; }
         }
     }
 
@@ -64,9 +78,14 @@ namespace NEA_Mafia_New_2022
             _message = message;
         }
 
+        public Message(byte[] packet) : base(packet)
+        {
+
+        }
+
         public string Text
         {
-            get { return _message; }
+            get { return ReadString(4, Data.Length - 4); }
             set
             {
                 _message = value;
