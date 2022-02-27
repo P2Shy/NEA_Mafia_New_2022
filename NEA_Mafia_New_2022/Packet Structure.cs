@@ -35,7 +35,7 @@ namespace NEA_Mafia_New_2022
 
         public ushort ReadUShort(int offset)
         {
-            return BitConverter.ToUInt16(_buffer, offset); 
+            return BitConverter.ToUInt16(_buffer, offset);
         }
         public void WriteUInt(ushort value, int offset)
         {
@@ -80,7 +80,7 @@ namespace NEA_Mafia_New_2022
 
         private string _message;
 
-        public Message(string message, string id) : base((ushort)(4 + message.Length + 128), 2000, id)
+        public Message(string message, string id) : base((ushort)(132 + message.Length), 2000, id)
         {
             Text = message;
         }
@@ -101,8 +101,31 @@ namespace NEA_Mafia_New_2022
         }
     }
 
-/*    public class Init : PacketStructure
+    public class GiveName : PacketStructure
     {
 
-    }*/
+        private string _userName;
+
+        public GiveName(string userName, string id) : base((ushort)(132 + userName.Length), 2020, id)
+        {
+            Name = userName;
+        }
+
+        public GiveName(byte[] packet) : base(packet)
+        {
+
+        }
+
+        public string Name
+        {
+            get { return ReadString(132, Data.Length - 132); }
+            set
+            {
+                _userName = value;
+                WriteString(value, 132);
+            }
+        }
+
+
+    }
 }

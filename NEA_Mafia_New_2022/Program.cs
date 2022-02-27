@@ -20,9 +20,9 @@ namespace NEA_Mafia_New_2022
 
             if (initMenuInput == "S")
             {
-                Server hostServer = new Server();
+                Server hostServer = new Server(3);
                 hostServer.Bind(6556);
-                hostServer.Listen(50);
+                hostServer.Listen();
                 hostServer.Accept();
 
                 while (true)
@@ -38,6 +38,10 @@ namespace NEA_Mafia_New_2022
                 while (true)
                 {
                     string msgString = Console.ReadLine();
+                    if (msgString == "d"){
+                        newClient.Disconnect();
+                        break;
+                    }
                     Message msg = new Message(msgString, newClient.ID);
                     newClient.Send(msg.Data);
                 }
