@@ -10,10 +10,12 @@ namespace NEA_Mafia_New_2022
     public abstract class PacketStructure
     {
         private byte[] _buffer;
+        private string _id;
 
         public PacketStructure(ushort length, ushort type, string id)
         {
             _buffer = new byte[length];
+            _id = id;
             WriteUShort(length, 0);
             WriteUShort(type, 2);
             WriteString(id, 4);
@@ -71,7 +73,7 @@ namespace NEA_Mafia_New_2022
 
         public string ID
         {
-            get { return ReadString(4, 128); }
+            get { return _id; }
         }
     }
 
@@ -80,7 +82,7 @@ namespace NEA_Mafia_New_2022
 
         private string _message;
 
-        public Message(string message, string id) : base((ushort)(132 + message.Length), 2000, id)
+        public Message(string message, string id) : base((ushort)(4 + id.Length*2 + message.Length), 2000, id)
         {
             Text = message;
         }
@@ -92,40 +94,30 @@ namespace NEA_Mafia_New_2022
 
         public string Text
         {
-            get { return ReadString(132, Data.Length - 132); }
+            get { return ReadString(4 + ID.Length*2, Data.Length - 4 + ID.Length*2); }
             set
             {
                 _message = value;
-                WriteString(value, 132);
+                WriteString(value, 4 + ID.Length * 2);
             }
         }
     }
 
-    public class GiveName : PacketStructure
+    public class Ready : PacketStructure
     {
-
-        private string _userName;
-
-        public GiveName(string userName, string id) : base((ushort)(132 + userName.Length), 2020, id)
-        {
-            Name = userName;
-        }
-
-        public GiveName(byte[] packet) : base(packet)
+        public Ready(string id) : base((ushort)(4) , 2020, id)
         {
 
         }
+    }
 
-        public string Name
+    public class Unready : PacketStructure
+    {
+        public Unready(string id) : base((ushort)(4), 2019, id)
         {
-            get { return ReadString(132, Data.Length - 132); }
-            set
-            {
-                _userName = value;
-                WriteString(value, 132);
-            }
+
         }
-
-
     }
 }
+
+ 

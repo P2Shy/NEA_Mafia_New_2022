@@ -11,11 +11,12 @@ namespace NEA_Mafia_New_2022
     {
         private Socket _socket;
         private byte[] _buffer;
-        private Guid clientGuid = Guid.NewGuid();
+        private string _id;
 
-        public Client()
+        public Client(string id)
         {
             _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            _id = id;
         }
 
         public void Connect(string ipAdress, int port)
@@ -44,16 +45,27 @@ namespace NEA_Mafia_New_2022
             }
         }
 
+
+
         public void RecivedCallback(IAsyncResult result)
         {
-            int bufLength = _socket.EndReceive(result);
-            byte[] packet = new byte[bufLength];
-            Array.Copy(_buffer, packet, packet.Length);
+            try
+            {
+                int bufLength = _socket.EndReceive(result);
+                byte[] packet = new byte[bufLength];
+                Array.Copy(_buffer, packet, packet.Length);
 
-            ClientPacketHandler.Handle(packet, _socket);
+                ClientPacketHandler.Handle(packet, _socket);
 
-            _buffer = new byte[1024];
-            _socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, RecivedCallback, null);
+                _buffer = new byte[1024];
+                _socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, RecivedCallback, null);
+            }
+
+            catch
+            {
+                Console.WriteLine("Connection could not be established");
+            }
+            
         }
 
         public void Send(byte[] data)
@@ -63,7 +75,7 @@ namespace NEA_Mafia_New_2022
 
         public string ID
         {
-            get { return clientGuid.ToString(); }
+            get { return _id; }
         }
     }
 

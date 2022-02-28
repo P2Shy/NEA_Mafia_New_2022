@@ -20,7 +20,7 @@ namespace NEA_Mafia_New_2022
 
             if (initMenuInput == "S")
             {
-                Server hostServer = new Server(3);
+                Server hostServer = new Server(2);
                 hostServer.Bind(6556);
                 hostServer.Listen();
                 hostServer.Accept();
@@ -32,7 +32,8 @@ namespace NEA_Mafia_New_2022
             }
             else if (initMenuInput == "C")
             {
-                Client newClient = new Client();
+                string name = Console.ReadLine();
+                Client newClient = new Client(name);
                 newClient.Connect("127.0.0.1", 6556);
 
                 while (true)
@@ -42,21 +43,22 @@ namespace NEA_Mafia_New_2022
                         newClient.Disconnect();
                         break;
                     }
+
+                    else if (msgString == "ready")
+                    {
+                        Ready rdy = new Ready(newClient.ID);
+                        newClient.Send(rdy.Data);
+                    }
+
+                    else if (msgString == "unready")
+                    {
+                        Unready unrdy = new Unready(newClient.ID);
+                        newClient.Send(unrdy.Data);
+                    }
                     Message msg = new Message(msgString, newClient.ID);
                     newClient.Send(msg.Data);
                 }
             }
-
-        }
-
-        void StartGame()
-        {
-            //distribute roles
-            //setup everything
-
-            GameState curState = GameState.Day;
-
-            
 
         }
 
