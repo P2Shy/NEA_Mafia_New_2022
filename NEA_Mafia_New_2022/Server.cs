@@ -95,8 +95,7 @@ namespace NEA_Mafia_New_2022
             {
                 case 2000:
                     Message msg = new Message(hpacket);
-                    Console.WriteLine(msg.Name + ":" + msg.Text);
-                    Console.WriteLine("message recived");
+                    
                     break;
                 case 2020:
                     break;

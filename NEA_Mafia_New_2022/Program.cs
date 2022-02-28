@@ -15,7 +15,10 @@ namespace NEA_Mafia_New_2022
 
         public static void Main(string[] args)
         {
-            Console.WriteLine("(S)erver or (C)lient");
+
+            Guid clientGuid = Guid.NewGuid();
+            int _idLength = (System.Text.Encoding.UTF8.GetByteCount(clientGuid.ToString()));
+            Console.WriteLine("(S)erver or (C)lient" + _idLength);
             string initMenuInput = Console.ReadLine();
 
             if (initMenuInput == "S")

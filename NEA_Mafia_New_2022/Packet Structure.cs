@@ -17,14 +17,11 @@ namespace NEA_Mafia_New_2022
         public PacketStructure(ushort length, ushort type, string id, string name)
         {
             _buffer = new byte[length];
-            _nameLength = 8*(System.Text.Encoding.UTF8.GetByteCount(name));
-            _idLength = 8 * (System.Text.Encoding.UTF8.GetByteCount(name));
-            displace = 4 + _nameLength + _idLength;
-            Console.WriteLine(_nameLength.ToString());
+            _nameLength = (System.Text.Encoding.UTF8.GetByteCount(name));
             WriteUShort(length, 0);
             WriteUShort(type, 2);
             WriteString(id, 4);
-            WriteString(name, 132);
+            WriteString(name, 40);
         }
 
         // Implement Marshal copy?
@@ -69,7 +66,7 @@ namespace NEA_Mafia_New_2022
             WriteUShort(length, 0);
             WriteUShort(type, 2);
             WriteString(id, 4);
-            WriteString(name, 132);
+            WriteString(name, 40);
         }
 
 
@@ -80,12 +77,12 @@ namespace NEA_Mafia_New_2022
 
         public string ID
         {
-            get { return ReadString(4, _idLength); }
+            get { return ReadString(4, 36); }
         }
 
         public string Name
         {
-            get { return ReadString(_idLength, _nameLength); }
+            get { return ReadString(40, _nameLength); }
         }
     }
 
@@ -94,7 +91,7 @@ namespace NEA_Mafia_New_2022
 
         private string _message;
 
-        public Message(string message, string id, string name) : base((ushort)( + message.Length), 2000, id, name)
+        public Message(string message, string id, string name) : base((ushort)(40 + (System.Text.Encoding.UTF8.GetByteCount(name)) + message.Length), 2000, id, name)
         {
             Text = message;
         }
@@ -106,11 +103,11 @@ namespace NEA_Mafia_New_2022
 
         public string Text
         {
-            get { return ReadString(displace, Data.Length - displace); }
+            get { return ReadString(40 + (System.Text.Encoding.UTF8.GetByteCount(Name)), Data.Length - (40 + (System.Text.Encoding.UTF8.GetByteCount(Name)))); }
             set
             {
                 _message = value;
-                WriteString(value, displace);
+                WriteString(value, 40 + (System.Text.Encoding.UTF8.GetByteCount(Name)));
             }
         }
     }
