@@ -94,7 +94,7 @@ namespace NEA_Mafia_New_2022
 
         public string Text
         {
-            get { return ReadString(4 + ID.Length*2, Data.Length - 4 + ID.Length*2); }
+            get { return ReadString((4 + ID.Length*2), Data.Length - (4 + ID.Length*2)); }
             set
             {
                 _message = value;

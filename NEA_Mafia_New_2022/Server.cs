@@ -111,8 +111,9 @@ namespace NEA_Mafia_New_2022
 
                 }
 
-                catch
+                catch (Exception ex)
                 {
+                    Console.WriteLine(ex.ToString());
                     Close(clientSocket);
                 }
             }
