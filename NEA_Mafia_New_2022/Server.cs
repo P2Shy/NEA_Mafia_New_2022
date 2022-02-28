@@ -3,6 +3,7 @@ using System;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Collections;
 
 namespace NEA_Mafia_New_2022
 {
@@ -11,6 +12,7 @@ namespace NEA_Mafia_New_2022
         private Socket __socket;
         private Guid serverID = Guid.NewGuid();
         private int __maxPlayers;
+        ArrayList arrSocket = new ArrayList();
 
         public Server(int players)
         {
@@ -38,11 +40,40 @@ namespace NEA_Mafia_New_2022
             Console.WriteLine("Closing socket for IP:" + sock.RemoteEndPoint.ToString() + " and releasing resources.");
             sock.Dispose();
             sock.Close();
+            
+        }
+
+        public void Broadcast(string message)
+        {
+            Message broadcast = new Message(message, serverID.ToString(), "Server");
+            foreach (Socket socket in arrSocket){
+                socket.Send(broadcast.Data);
+            }
+        }
+
+        public void Handle(byte[] hpacket, Socket clientSocket)
+        {
+            ushort packetLength = BitConverter.ToUInt16(hpacket, 0);
+            ushort packetType = BitConverter.ToUInt16(hpacket, 2);
+
+            switch (packetType)
+            {
+                case 2000:
+                    Message msg = new Message(hpacket);
+                    string name = msg.Name;
+                    string message = msg.Text;
+                    Broadcast(name + ":" + message);
+                    break;
+                case 2020:
+                    break;
+
+            }
         }
 
         public void AcceptedCallback(IAsyncResult result)
         {
             Socket clientSocket = __socket.EndAccept(result);
+            arrSocket.Add(clientSocket);
             Accept();
             var buffer = new byte[1024];
             clientSocket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, RecivedCallback, clientSocket);
@@ -63,7 +94,7 @@ namespace NEA_Mafia_New_2022
                         byte[] packet = new byte[bufferSize];
                         Array.Copy(buffer, packet, packet.Length);
 
-                        ServerPacketHandler.Handle(packet, clientSocket);
+                        Handle(packet, clientSocket);
 
                         clientSocket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, RecivedCallback, clientSocket);
                     }
@@ -83,25 +114,4 @@ namespace NEA_Mafia_New_2022
 
         }
     }
-
-    public static class ServerPacketHandler
-    {
-        public static void Handle(byte[] hpacket, Socket clientSocket)
-        {
-            ushort packetLength = BitConverter.ToUInt16(hpacket, 0);
-            ushort packetType = BitConverter.ToUInt16(hpacket, 2);
-
-            switch (packetType)
-            {
-                case 2000:
-                    Message msg = new Message(hpacket);
-                    
-                    break;
-                case 2020:
-                    break;
-
-            }
-        }
-    }
-
 }
