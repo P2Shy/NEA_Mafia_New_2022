@@ -137,7 +137,11 @@ namespace NEA_Mafia_New_2022
 <<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
                 catch (Exception ex)
+=======
+                catch
+>>>>>>> parent of d6eeee7 (final fucked up)
 =======
                 catch
 >>>>>>> parent of d6eeee7 (final fucked up)
