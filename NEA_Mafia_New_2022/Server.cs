@@ -135,9 +135,12 @@ namespace NEA_Mafia_New_2022
             ServerPacketHandler.Handle(packet, clientSocket);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
                 catch (Exception ex)
+=======
+                catch
+>>>>>>> parent of d6eeee7 (final fucked up)
                 {
-                    Console.WriteLine(ex.ToString());
                     Close(clientSocket);
                 }
             }
