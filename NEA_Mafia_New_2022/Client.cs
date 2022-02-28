@@ -24,12 +24,6 @@ namespace NEA_Mafia_New_2022
             _socket.BeginConnect(new IPEndPoint(IPAddress.Parse(ipAdress), port), ConnectCallback, null);
         }
 
-        public void Disconnect()
-        {
-            _socket.Shutdown(SocketShutdown.Both);
-            _socket.Close();
-        }
-
         public void ConnectCallback(IAsyncResult result)
         {
             if (_socket.Connected)

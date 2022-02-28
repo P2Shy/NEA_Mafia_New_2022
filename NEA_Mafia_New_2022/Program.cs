@@ -20,9 +20,13 @@ namespace NEA_Mafia_New_2022
 
             if (initMenuInput == "S")
             {
+<<<<<<< HEAD
                 Server hostServer = new Server(2);
+=======
+                Server hostServer = new Server();
+>>>>>>> parent of 4291c0f (FIXED SEND TWICE PROBLEM!!!)
                 hostServer.Bind(6556);
-                hostServer.Listen();
+                hostServer.Listen(50);
                 hostServer.Accept();
 
                 while (true)
@@ -39,6 +43,7 @@ namespace NEA_Mafia_New_2022
                 while (true)
                 {
                     string msgString = Console.ReadLine();
+<<<<<<< HEAD
                     if (msgString == "d"){
                         newClient.Disconnect();
                         break;
@@ -55,6 +60,8 @@ namespace NEA_Mafia_New_2022
                         Unready unrdy = new Unready(newClient.ID);
                         newClient.Send(unrdy.Data);
                     }
+=======
+>>>>>>> parent of 4291c0f (FIXED SEND TWICE PROBLEM!!!)
                     Message msg = new Message(msgString, newClient.ID);
                     newClient.Send(msg.Data);
                 }

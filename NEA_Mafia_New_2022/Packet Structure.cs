@@ -37,7 +37,7 @@ namespace NEA_Mafia_New_2022
 
         public ushort ReadUShort(int offset)
         {
-            return BitConverter.ToUInt16(_buffer, offset);
+            return BitConverter.ToUInt16(_buffer, offset); 
         }
         public void WriteUInt(ushort value, int offset)
         {
@@ -82,7 +82,11 @@ namespace NEA_Mafia_New_2022
 
         private string _message;
 
+<<<<<<< HEAD
         public Message(string message, string id) : base((ushort)(4 + id.Length*2 + message.Length), 2000, id)
+=======
+        public Message(string message, string id) : base((ushort)(4 + message.Length + 128), 2000, id)
+>>>>>>> parent of 4291c0f (FIXED SEND TWICE PROBLEM!!!)
         {
             Text = message;
         }
@@ -103,6 +107,7 @@ namespace NEA_Mafia_New_2022
         }
     }
 
+<<<<<<< HEAD
     public class Ready : PacketStructure
     {
         public Ready(string id) : base((ushort)(4) , 2020, id)
@@ -121,3 +126,10 @@ namespace NEA_Mafia_New_2022
 }
 
  
+=======
+/*    public class Init : PacketStructure
+    {
+
+    }*/
+}
+>>>>>>> parent of 4291c0f (FIXED SEND TWICE PROBLEM!!!)

@@ -1,9 +1,14 @@
 ﻿
-using System;
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
 using System.Net;
 using System.Net.Sockets;
+<<<<<<< HEAD
 using System.Text;
 using System.Collections;
+=======
+>>>>>>> parent of 4291c0f (FIXED SEND TWICE PROBLEM!!!)
 using System.Threading;
 
 namespace NEA_Mafia_New_2022
@@ -11,15 +16,18 @@ namespace NEA_Mafia_New_2022
     class Server
     {
         private Socket __socket;
+        private byte[] __buffer = new byte[1024];
         private Guid clientID = Guid.NewGuid();
+<<<<<<< HEAD
         private int __maxPlayers;
         ArrayList arrSocket = new ArrayList();
         int readyCount = 0;
+=======
+>>>>>>> parent of 4291c0f (FIXED SEND TWICE PROBLEM!!!)
 
-        public Server(int players)
+        public Server()
         {
             __socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            __maxPlayers = players;
         }
 
         public void WaitReady()
@@ -40,9 +48,13 @@ namespace NEA_Mafia_New_2022
             __socket.Bind(new IPEndPoint(IPAddress.Any, port));
         }
 
-        public void Listen()
+        public void Listen(int backlog)
         {
+<<<<<<< HEAD
             __socket.Listen(__maxPlayers+1);
+=======
+            __socket.Listen(backlog);
+>>>>>>> parent of 4291c0f (FIXED SEND TWICE PROBLEM!!!)
         }
 
         public void Accept()
@@ -50,6 +62,7 @@ namespace NEA_Mafia_New_2022
             __socket.BeginAccept(AcceptedCallback, null);
         }
 
+<<<<<<< HEAD
         public void Close(Socket sock)
         {
             Console.WriteLine("Closing socket for IP:" + sock.RemoteEndPoint.ToString() + " and releasing resources.");
@@ -78,12 +91,15 @@ namespace NEA_Mafia_New_2022
             }
         }
 
+=======
+>>>>>>> parent of 4291c0f (FIXED SEND TWICE PROBLEM!!!)
         public void AcceptedCallback(IAsyncResult result)
         {
             var clientSocket = __socket.EndAccept(result);
             arrSocket.Add(clientSocket);
             byte[] buffer = new byte[1024];
             Accept();
+<<<<<<< HEAD
             clientSocket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, RecivedCallback, clientSocket);
 
             void RecivedCallback(IAsyncResult result)
@@ -103,14 +119,22 @@ namespace NEA_Mafia_New_2022
 
                         clientSocket.BeginReceive(buffer, 0, buffer.Length, SocketFlags.None, RecivedCallback, clientSocket);
                     }
+=======
+            clientSocket.BeginReceive(__buffer, 0, __buffer.Length, SocketFlags.None, RecivedCallback, clientSocket);
+            
+        }
+>>>>>>> parent of 4291c0f (FIXED SEND TWICE PROBLEM!!!)
 
-                    else
-                    {
-                        Close(clientSocket);
-                    }
+        public void RecivedCallback(IAsyncResult result)
+        {
+            Socket clientSocket = result.AsyncState as Socket;
+            int bufferSize = clientSocket.EndReceive(result);
+            byte[] packet = new byte[bufferSize];
+            Array.Copy(__buffer, packet, packet.Length);
 
-                }
+            ServerPacketHandler.Handle(packet, clientSocket);
 
+<<<<<<< HEAD
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex.ToString());
@@ -118,11 +142,28 @@ namespace NEA_Mafia_New_2022
                 }
             }
             
+=======
+            __buffer = new byte[1024];
+            clientSocket.BeginReceive(__buffer, 0, __buffer.Length, SocketFlags.None, RecivedCallback, clientSocket);
+>>>>>>> parent of 4291c0f (FIXED SEND TWICE PROBLEM!!!)
         }
 
         public void GameLogic()
         {
+<<<<<<< HEAD
             
+=======
+            ushort packetLength = BitConverter.ToUInt16(hpacket,0);
+            ushort packetType = BitConverter.ToUInt16(hpacket, 2);
+
+            switch (packetType)
+            {
+                case 2000:
+                    Message msg = new Message(hpacket);
+                    Console.WriteLine(msg.ID +":"+ msg.Text);
+                    break;
+            }
+>>>>>>> parent of 4291c0f (FIXED SEND TWICE PROBLEM!!!)
         }
     }       
 }
