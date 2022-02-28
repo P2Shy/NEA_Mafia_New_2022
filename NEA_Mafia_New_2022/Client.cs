@@ -11,17 +11,24 @@ namespace NEA_Mafia_New_2022
     {
         private Socket _socket;
         private byte[] _buffer;
-        private string _id;
+        private Guid clientGuid = Guid.NewGuid();
+        private string _username;
 
-        public Client(string id)
+        public Client(string username)
         {
             _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            _id = id;
+            _username = username;
         }
 
         public void Connect(string ipAdress, int port)
         {
             _socket.BeginConnect(new IPEndPoint(IPAddress.Parse(ipAdress), port), ConnectCallback, null);
+        }
+
+        public void Disconnect()
+        {
+            _socket.Shutdown(SocketShutdown.Both);
+            _socket.Close();
         }
 
         public void ConnectCallback(IAsyncResult result)
@@ -39,27 +46,16 @@ namespace NEA_Mafia_New_2022
             }
         }
 
-
-
         public void RecivedCallback(IAsyncResult result)
         {
-            try
-            {
-                int bufLength = _socket.EndReceive(result);
-                byte[] packet = new byte[bufLength];
-                Array.Copy(_buffer, packet, packet.Length);
+            int bufLength = _socket.EndReceive(result);
+            byte[] packet = new byte[bufLength];
+            Array.Copy(_buffer, packet, packet.Length);
 
-                ClientPacketHandler.Handle(packet, _socket);
+            ClientPacketHandler.Handle(packet, _socket);
 
-                _buffer = new byte[1024];
-                _socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, RecivedCallback, null);
-            }
-
-            catch
-            {
-                Console.WriteLine("Connection could not be established");
-            }
-            
+            _buffer = new byte[1024];
+            _socket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, RecivedCallback, null);
         }
 
         public void Send(byte[] data)
@@ -69,7 +65,12 @@ namespace NEA_Mafia_New_2022
 
         public string ID
         {
-            get { return _id; }
+            get { return clientGuid.ToString(); }
+        }
+
+        public string Name
+        {
+            get { return _username; }
         }
     }
 

@@ -10,15 +10,21 @@ namespace NEA_Mafia_New_2022
     public abstract class PacketStructure
     {
         private byte[] _buffer;
-        private string _id;
+        public int _nameLength;
+        public int _idLength;
+        public int displace;
 
-        public PacketStructure(ushort length, ushort type, string id)
+        public PacketStructure(ushort length, ushort type, string id, string name)
         {
             _buffer = new byte[length];
-            _id = id;
+            _nameLength = 8*(System.Text.Encoding.UTF8.GetByteCount(name));
+            _idLength = 8 * (System.Text.Encoding.UTF8.GetByteCount(name));
+            displace = 4 + _nameLength + _idLength;
+            Console.WriteLine(_nameLength.ToString());
             WriteUShort(length, 0);
             WriteUShort(type, 2);
             WriteString(id, 4);
+            WriteString(name, 132);
         }
 
         // Implement Marshal copy?
@@ -37,7 +43,7 @@ namespace NEA_Mafia_New_2022
 
         public ushort ReadUShort(int offset)
         {
-            return BitConverter.ToUInt16(_buffer, offset); 
+            return BitConverter.ToUInt16(_buffer, offset);
         }
         public void WriteUInt(ushort value, int offset)
         {
@@ -58,11 +64,12 @@ namespace NEA_Mafia_New_2022
             return Encoding.UTF8.GetString(_buffer, offset, count);
         }
 
-        public void Header(ushort length, ushort type, string id)
+        public void Header(ushort length, ushort type, string id, string name)
         {
             WriteUShort(length, 0);
             WriteUShort(type, 2);
             WriteString(id, 4);
+            WriteString(name, 132);
         }
 
 
@@ -73,7 +80,12 @@ namespace NEA_Mafia_New_2022
 
         public string ID
         {
-            get { return _id; }
+            get { return ReadString(4, _idLength); }
+        }
+
+        public string Name
+        {
+            get { return ReadString(_idLength, _nameLength); }
         }
     }
 
@@ -82,11 +94,7 @@ namespace NEA_Mafia_New_2022
 
         private string _message;
 
-<<<<<<< HEAD
-        public Message(string message, string id) : base((ushort)(4 + id.Length*2 + message.Length), 2000, id)
-=======
-        public Message(string message, string id) : base((ushort)(4 + message.Length + 128), 2000, id)
->>>>>>> parent of 4291c0f (FIXED SEND TWICE PROBLEM!!!)
+        public Message(string message, string id, string name) : base((ushort)( + message.Length), 2000, id, name)
         {
             Text = message;
         }
@@ -98,38 +106,12 @@ namespace NEA_Mafia_New_2022
 
         public string Text
         {
-            get { return ReadString(4 + ID.Length*2, Data.Length - 4 + ID.Length*2); }
+            get { return ReadString(displace, Data.Length - displace); }
             set
             {
                 _message = value;
-                WriteString(value, 4 + ID.Length * 2);
+                WriteString(value, displace);
             }
         }
     }
-
-<<<<<<< HEAD
-    public class Ready : PacketStructure
-    {
-        public Ready(string id) : base((ushort)(4) , 2020, id)
-        {
-
-        }
-    }
-
-    public class Unready : PacketStructure
-    {
-        public Unready(string id) : base((ushort)(4), 2019, id)
-        {
-
-        }
-    }
 }
-
- 
-=======
-/*    public class Init : PacketStructure
-    {
-
-    }*/
-}
->>>>>>> parent of 4291c0f (FIXED SEND TWICE PROBLEM!!!)

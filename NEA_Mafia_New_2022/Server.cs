@@ -9,7 +9,7 @@ namespace NEA_Mafia_New_2022
     class Server
     {
         private Socket __socket;
-        private Guid clientID = Guid.NewGuid();
+        private Guid serverID = Guid.NewGuid();
         private int __maxPlayers;
 
         public Server(int players)
@@ -95,7 +95,7 @@ namespace NEA_Mafia_New_2022
             {
                 case 2000:
                     Message msg = new Message(hpacket);
-                    Console.WriteLine(msg.ID + ":" + msg.Text);
+                    Console.WriteLine(msg.Name + ":" + msg.Text);
                     Console.WriteLine("message recived");
                     break;
                 case 2020:

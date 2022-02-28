@@ -8,7 +8,7 @@ using System.Timers;
 namespace NEA_Mafia_New_2022
 {
 
-    public enum GameState { Day, Night}
+    public enum GameState { Day, Night }
 
     class Program
     {
@@ -20,13 +20,9 @@ namespace NEA_Mafia_New_2022
 
             if (initMenuInput == "S")
             {
-<<<<<<< HEAD
-                Server hostServer = new Server(2);
-=======
-                Server hostServer = new Server();
->>>>>>> parent of 4291c0f (FIXED SEND TWICE PROBLEM!!!)
+                Server hostServer = new Server(3);
                 hostServer.Bind(6556);
-                hostServer.Listen(50);
+                hostServer.Listen();
                 hostServer.Accept();
 
                 while (true)
@@ -36,6 +32,7 @@ namespace NEA_Mafia_New_2022
             }
             else if (initMenuInput == "C")
             {
+                Console.Write("Input name: ");
                 string name = Console.ReadLine();
                 Client newClient = new Client(name);
                 newClient.Connect("127.0.0.1", 6556);
@@ -43,29 +40,26 @@ namespace NEA_Mafia_New_2022
                 while (true)
                 {
                     string msgString = Console.ReadLine();
-<<<<<<< HEAD
-                    if (msgString == "d"){
+                    if (msgString == "d")
+                    {
                         newClient.Disconnect();
                         break;
                     }
-
-                    else if (msgString == "ready")
-                    {
-                        Ready rdy = new Ready(newClient.ID);
-                        newClient.Send(rdy.Data);
-                    }
-
-                    else if (msgString == "unready")
-                    {
-                        Unready unrdy = new Unready(newClient.ID);
-                        newClient.Send(unrdy.Data);
-                    }
-=======
->>>>>>> parent of 4291c0f (FIXED SEND TWICE PROBLEM!!!)
-                    Message msg = new Message(msgString, newClient.ID);
+                    Message msg = new Message(msgString, newClient.ID, newClient.Name);
                     newClient.Send(msg.Data);
                 }
             }
+
+        }
+
+        void StartGame()
+        {
+            //distribute roles
+            //setup everything
+
+            GameState curState = GameState.Day;
+
+
 
         }
 
